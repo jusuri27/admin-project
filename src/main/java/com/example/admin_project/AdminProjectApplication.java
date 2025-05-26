@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AdminProjectApplication {
 
 	public static void main(String[] args) {
-		System.out.println("args = " + args);
 		SpringApplication.run(AdminProjectApplication.class, args);
 	}
 
