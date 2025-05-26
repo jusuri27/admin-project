@@ -6,6 +6,7 @@ import com.example.admin_project.menu.mapper.MenuMapper;
 import com.example.admin_project.menu.repository.MenuRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,8 +16,10 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final MenuMapper menuMapper;
 
+    @Transactional(readOnly = true)
     public List<MenuResponse> findMenuList() {
-        List<Menu> menuEntity = menuRepository.findAll();
+        List<Menu> menuEntity = menuRepository.findAllWithChildren();
         return menuMapper.toDtoList(menuEntity);
     }
+
 }

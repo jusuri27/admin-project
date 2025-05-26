@@ -36,5 +36,6 @@ public class Menu {
 
     @Comment("자식 메뉴")
     @OneToMany(mappedBy = "parent")
+    @OrderBy("sortOrder ASC")
     private List<Menu> children = new ArrayList<>();
 }
