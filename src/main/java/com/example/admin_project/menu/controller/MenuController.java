@@ -1,11 +1,10 @@
 package com.example.admin_project.menu.controller;
 
+import com.example.admin_project.menu.dto.MenuCreateRequest;
 import com.example.admin_project.menu.dto.MenuResponse;
 import com.example.admin_project.menu.service.MenuService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,8 +14,13 @@ import java.util.List;
 public class MenuController {
 
     private final MenuService menuService;
-    @GetMapping()
+    @GetMapping
     public List<MenuResponse> getMenuList() {
         return menuService.findMenuList();
+    }
+
+    @PostMapping
+    public void createMenu(@RequestBody MenuCreateRequest menuCreateRequest) {
+        menuService.createMenu(menuCreateRequest);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.admin_project.menu.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
@@ -9,6 +9,9 @@ import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Menu {
 
     @Comment("식별자")
