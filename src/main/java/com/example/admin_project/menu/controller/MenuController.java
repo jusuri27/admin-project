@@ -15,11 +15,6 @@ import java.util.List;
 public class MenuController {
 
     private final MenuService menuService;
-    /****
-     * Retrieves the list of available menus.
-     *
-     * @return a list of menu response objects representing all menus
-     */
     @GetMapping()
     public List<MenuResponse> getMenuList() {
         return menuService.findMenuList();
