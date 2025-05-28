@@ -2,6 +2,7 @@ package com.example.admin_project.menu.controller;
 
 import com.example.admin_project.menu.dto.MenuCreateRequest;
 import com.example.admin_project.menu.dto.MenuResponse;
+import com.example.admin_project.menu.dto.MenuUpdateRequest;
 import com.example.admin_project.menu.service.MenuService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 public class MenuController {
 
     private final MenuService menuService;
+
     @GetMapping
     public List<MenuResponse> getMenuList() {
         return menuService.findMenuList();
@@ -22,5 +24,10 @@ public class MenuController {
     @PostMapping
     public void createMenu(@RequestBody MenuCreateRequest menuCreateRequest) {
         menuService.createMenu(menuCreateRequest);
+    }
+
+    @PatchMapping
+    public void updateMenu(@RequestBody MenuUpdateRequest menuUpdateRequest) {
+        menuService.updateMenu(menuUpdateRequest);
     }
 }

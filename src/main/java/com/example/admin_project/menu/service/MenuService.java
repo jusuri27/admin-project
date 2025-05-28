@@ -2,6 +2,7 @@ package com.example.admin_project.menu.service;
 
 import com.example.admin_project.menu.dto.MenuCreateRequest;
 import com.example.admin_project.menu.dto.MenuResponse;
+import com.example.admin_project.menu.dto.MenuUpdateRequest;
 import com.example.admin_project.menu.entity.Menu;
 import com.example.admin_project.menu.exception.*;
 import com.example.admin_project.menu.mapper.MenuMapper;
@@ -32,11 +33,18 @@ public class MenuService {
                     .orElseThrow(() -> new MenuNotFoundException("부모 메뉴가 존재하지 않습니다."));
         }
         validateMenu(parentMenu, menuCreateRequest);
-        Menu menuEntity = menuCreateRequest.toEntity(parentMenu);
+        Menu menuEntity = menuCreateRequest.toCreateEntity(parentMenu);
         menuRepository.save(menuEntity);
     }
 
-    public void validateMenu(Menu parentMenu, MenuCreateRequest menuCreateRequest) {
+    @Transactional
+    public void updateMenu(MenuUpdateRequest menuUpdateRequest) {
+        Menu entity = menuRepository.findById(menuUpdateRequest.getId()).
+                orElseThrow(() -> new MenuNotFoundException("부모 메뉴가 존재하지 않습니다."));
+        menuUpdateRequest.toUpdateEntity(entity);
+    }
+
+    private void validateMenu(Menu parentMenu, MenuCreateRequest menuCreateRequest) {
         if(menuCreateRequest.getParentId() == null) {
             validateParentMenu(menuCreateRequest);
         } else {
@@ -54,7 +62,7 @@ public class MenuService {
         }
     }
 
-    public void validateParentMenu(MenuCreateRequest menuCreateRequest) {
+    private void validateParentMenu(MenuCreateRequest menuCreateRequest) {
         if (menuRepository.existsByParentIsNullAndMenuName(menuCreateRequest.getMenuName())) {
             throw new DuplicateParentMenuNameException("최상위 메뉴 이름이 중복됩니다.");
         }
