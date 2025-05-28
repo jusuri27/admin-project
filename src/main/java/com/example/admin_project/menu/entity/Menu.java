@@ -62,4 +62,10 @@ public class Menu {
     @OneToMany(mappedBy = "parent")
     @OrderBy("sortOrder ASC")
     private List<Menu> children = new ArrayList<>();
+
+    public void updateMenu(String menuName, int sortOrder, Boolean isUse) {
+        this.menuName = menuName;
+        this.sortOrder = sortOrder;
+        this.isUse = isUse;
+    }
 }
