@@ -13,4 +13,12 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
     @EntityGraph(attributePaths = {"children"})
     @Query("SELECT c FROM Menu c WHERE c.parent IS NULL")
     List<Menu> findAllWithChildren();
+
+    boolean existsByParentIdAndSortOrder(Long id, int sortOrder);
+
+    boolean existsByParentIdAndMenuName(Long id, String menuName);
+
+    boolean existsByParentIsNullAndMenuName(String menuName);
+
+    boolean existsByParentIsNullAndSortOrder(int sortOrder);
 }
