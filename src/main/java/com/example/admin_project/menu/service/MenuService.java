@@ -24,6 +24,7 @@ public class MenuService {
         return menuMapper.toDtoList(menuEntity);
     }
 
+    @Transactional
     public void createMenu(MenuCreateRequest menuCreateRequest) {
         Menu parentMenu = null;
         if(menuCreateRequest.getParentId() != null) {
