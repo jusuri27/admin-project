@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface MenuRepository extends JpaRepository<Menu, Long> {
     @EntityGraph(attributePaths = {"children"})
-    @Query("SELECT c FROM Menu c WHERE c.parent IS NULL")
+    @Query("SELECT c FROM Menu c WHERE c.parent IS NULL AND c.isUse = true")
     List<Menu> findAllWithChildren();
 
     boolean existsByParentIdAndSortOrder(Long id, int sortOrder);

@@ -45,6 +45,12 @@ public class MenuService {
         menuUpdateRequest.toUpdateEntity(entity);
     }
 
+    @Transactional
+    public void deleteMenu(Long menuId) {
+        Menu entity = menuRepository.findById(menuId).orElseThrow(() -> new MenuNotFoundException("해당 메뉴가 존재하지 않습니다."));
+        entity.softDeleteMenu();
+    }
+
     private Menu findParentMenu(Long parentId) {
         return parentId == null ? null : menuRepository.findById(parentId).orElseThrow(() -> new MenuNotFoundException("부모 메뉴가 존재하지 않습니다."));
     }

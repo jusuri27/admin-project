@@ -3,6 +3,7 @@ package com.example.admin_project.menu.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class Menu {
     @Comment("자식 메뉴")
     @OneToMany(mappedBy = "parent")
     @OrderBy("sortOrder ASC")
+    @Where(clause = "is_use = true")
     private List<Menu> children = new ArrayList<>();
 
     public void updateMenu(String menuName, int sortOrder, Boolean isUse) {
@@ -68,4 +70,9 @@ public class Menu {
         this.sortOrder = sortOrder;
         this.isUse = isUse;
     }
+
+    public void softDeleteMenu() {
+        this.isUse = false;
+    }
+
 }
