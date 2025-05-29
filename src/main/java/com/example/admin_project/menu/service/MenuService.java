@@ -1,6 +1,7 @@
 package com.example.admin_project.menu.service;
 
 import com.example.admin_project.menu.dto.MenuCreateRequest;
+import com.example.admin_project.menu.dto.MenuRequest;
 import com.example.admin_project.menu.dto.MenuResponse;
 import com.example.admin_project.menu.dto.MenuUpdateRequest;
 import com.example.admin_project.menu.entity.Menu;
@@ -27,46 +28,50 @@ public class MenuService {
 
     @Transactional
     public void createMenu(MenuCreateRequest menuCreateRequest) {
-        Menu parentMenu = null;
-        if(menuCreateRequest.getParentId() != null) {
-            parentMenu = menuRepository.findById(menuCreateRequest.getParentId())
-                    .orElseThrow(() -> new MenuNotFoundException("부모 메뉴가 존재하지 않습니다."));
-        }
+        Menu parentMenu = findParentMenu(menuCreateRequest.getParentId());
         validateMenu(parentMenu, menuCreateRequest);
+
         Menu menuEntity = menuCreateRequest.toCreateEntity(parentMenu);
         menuRepository.save(menuEntity);
     }
 
     @Transactional
     public void updateMenu(MenuUpdateRequest menuUpdateRequest) {
+        Menu parentMenu = findParentMenu(menuUpdateRequest.getParentId());
+        validateMenu(parentMenu, menuUpdateRequest);
+
         Menu entity = menuRepository.findById(menuUpdateRequest.getId()).
-                orElseThrow(() -> new MenuNotFoundException("부모 메뉴가 존재하지 않습니다."));
+                orElseThrow(() -> new MenuNotFoundException("해당 메뉴가 존재하지 않습니다."));
         menuUpdateRequest.toUpdateEntity(entity);
     }
 
-    private void validateMenu(Menu parentMenu, MenuCreateRequest menuCreateRequest) {
-        if(menuCreateRequest.getParentId() == null) {
-            validateParentMenu(menuCreateRequest);
+    private Menu findParentMenu(Long parentId) {
+        return parentId == null ? null : menuRepository.findById(parentId).orElseThrow(() -> new MenuNotFoundException("부모 메뉴가 존재하지 않습니다."));
+    }
+
+    private void validateMenu(Menu parentMenu, MenuRequest menuRequest) {
+        if(menuRequest.getParentId() == null) {
+            validateParentMenu(menuRequest);
         } else {
-            validateChildrenMenu(parentMenu, menuCreateRequest);
+            validateChildrenMenu(parentMenu, menuRequest);
         }
     }
 
-    private void validateChildrenMenu(Menu parentMenu, MenuCreateRequest menuCreateRequest) {
-        if (menuRepository.existsByParentIdAndSortOrder(parentMenu.getId(), menuCreateRequest.getSortOrder())) {
+    private void validateChildrenMenu(Menu parentMenu, MenuRequest menuRequest) {
+        if (menuRepository.existsByParentIdAndSortOrder(parentMenu.getId(), menuRequest.getSortOrder())) {
             throw new DuplicateChildrenSortOrderException("자식 메뉴 순서가 중복됩니다.");
         }
 
-        if (menuRepository.existsByParentIdAndMenuName(parentMenu.getId(), menuCreateRequest.getMenuName())) {
+        if (menuRepository.existsByParentIdAndMenuName(parentMenu.getId(), menuRequest.getMenuName())) {
             throw new DuplicateChildrenMenuNameException("자식 메뉴 이름이 중복됩니다.");
         }
     }
 
-    private void validateParentMenu(MenuCreateRequest menuCreateRequest) {
-        if (menuRepository.existsByParentIsNullAndMenuName(menuCreateRequest.getMenuName())) {
+    private void validateParentMenu(MenuRequest menuRequest) {
+        if (menuRepository.existsByParentIsNullAndMenuName(menuRequest.getMenuName())) {
             throw new DuplicateParentMenuNameException("최상위 메뉴 이름이 중복됩니다.");
         }
-        if (menuRepository.existsByParentIsNullAndSortOrder(menuCreateRequest.getSortOrder())) {
+        if (menuRepository.existsByParentIsNullAndSortOrder(menuRequest.getSortOrder())) {
             throw new DuplicateParentSortOrderException("최상위 메뉴 순서가 중복됩니다.");
         }
     }
