@@ -36,7 +36,11 @@ dependencies {
 	// validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// Logstash JSON Encoder 라이브러리 추가
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.assertj:assertj-core:3.24.2'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

@@ -1,0 +1,13 @@
+{
+  "parentMenu": {
+    "menuName": "사용자 관리",
+    "sortOrder": 2,
+    "isUse": true
+  },
+  "childMenu": {
+    "menuName": "대시보드",
+    "sortOrder": 1,
+    "isUse": true,
+    "parentId": 1
+  }
+}
