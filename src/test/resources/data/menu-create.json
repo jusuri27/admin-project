@@ -9,5 +9,27 @@
     "sortOrder": 1,
     "isUse": true,
     "parentId": 1
+  },
+  "parentMenuSameOrder": {
+    "menuName": "유저 관리",
+    "sortOrder": 2,
+    "isUse": true
+  },
+  "parentMenuSameName": {
+    "menuName": "사용자 관리",
+    "sortOrder": 22,
+    "isUse": true
+  },
+  "childMenuSameOrder": {
+    "menuName": "공지사항",
+    "sortOrder": 1,
+    "isUse": true,
+    "parentId": 1
+  },
+  "childMenuSameName": {
+    "menuName": "대시보드",
+    "sortOrder": 22,
+    "isUse": true,
+    "parentId": 1
   }
 }
