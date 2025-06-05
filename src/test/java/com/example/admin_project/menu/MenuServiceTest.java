@@ -35,8 +35,9 @@ public class MenuServiceTest {
     private ObjectMapper objectMapper;
 
     private Map<String, MenuCreateRequest> loadJsonMap(String path) throws IOException {
-        InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-        return objectMapper.readValue(is, new TypeReference<>() {});
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
+            return objectMapper.readValue(is, new TypeReference<>() {});
+        }
     }
 
     @BeforeEach
