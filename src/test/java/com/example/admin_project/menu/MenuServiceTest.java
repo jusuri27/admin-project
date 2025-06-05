@@ -42,13 +42,13 @@ public class MenuServiceTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Map<String, MenuCreateRequest> loadJsonMap(String path) {
+    private <T> Map<String, T> loadJsonMap(String path, TypeReference<Map<String, T>> typeRef) {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(path)) {
 
             if (is == null) {
                 throw new FileNotFoundException("Resource not found: " + path);
             }
-            return objectMapper.readValue(is, new TypeReference<>() {});
+            return objectMapper.readValue(is, typeRef);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load json from " + path, e);
         }
@@ -57,7 +57,7 @@ public class MenuServiceTest {
     @BeforeAll
     void beforeAll() {
         // 전체 테스트 전에 한 번만 실행
-        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json");
+        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json", new TypeReference<Map<String, MenuCreateRequest>>() {});
         MenuCreateRequest parentRequest = requestMap.get("parentMenu");
         MenuCreateRequest childRequest = requestMap.get("childMenu");
 
@@ -80,7 +80,7 @@ public class MenuServiceTest {
     @Test
     void 동일한_정렬순서로_부모메뉴를_추가하면_예외가_발생한다() {
         // given
-        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json");
+        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json", new TypeReference<Map<String, MenuCreateRequest>>() {});
         MenuCreateRequest parentMenuSameOrder = requestMap.get("parentMenuSameOrder");
 
         // when & then
@@ -92,7 +92,7 @@ public class MenuServiceTest {
     @Test
     void 동일한_메뉴이름의_부모메뉴를_추가하면_예외가_발생한다() {
         // given
-        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json");
+        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json", new TypeReference<Map<String, MenuCreateRequest>>() {});
         MenuCreateRequest parentMenuSameName = requestMap.get("parentMenuSameName");
 
         // when & then
@@ -104,7 +104,7 @@ public class MenuServiceTest {
     @Test
     void 동일한_정렬순서로_자식메뉴를_추가하면_예외가_발생한다() {
         // given
-        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json");
+        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json", new TypeReference<Map<String, MenuCreateRequest>>() {});
         MenuCreateRequest childMenuSameOrder = requestMap.get("childMenuSameOrder");
 
         // when & then
@@ -116,9 +116,8 @@ public class MenuServiceTest {
     @Test
     void 동일한_메뉴이름의_자식메뉴를_추가하면_예외가_발생한다() {
         // given
-        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json");
+        Map<String, MenuCreateRequest> requestMap = loadJsonMap("data/menu-create.json", new TypeReference<Map<String, MenuCreateRequest>>() {});
         MenuCreateRequest childMenuSameName = requestMap.get("childMenuSameName");
-
 
         // when & then
         assertThatThrownBy(() -> menuService.createMenu(childMenuSameName))
