@@ -1,0 +1,14 @@
+{
+  "updateParentMenu": {
+    "id": 1,
+    "menuName": "사용자 관리 수정",
+    "sortOrder": 200,
+    "isUse": true
+  },
+  "updateChildMenu": {
+    "id": 2,
+    "menuName": "대시보드 수정",
+    "sortOrder": 100,
+    "isUse": true
+  }
+}
