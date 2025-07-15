@@ -4,6 +4,7 @@ import com.example.admin_project.userlog.entity.UserLog;
 import com.example.admin_project.userlog.repository.UserLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,8 @@ public class UserLogService {
 
     private final UserLogRepository userLogRepository;
 
-    private static final String LOG_FILE_PATH = "C:/log/user-action.log";
+    @Value("${app.log.user-action-path}")
+    private String LOG_FILE_PATH;
 
 
     private long lastProcessedLine = 0;
@@ -36,27 +38,27 @@ public class UserLogService {
                 return;
             }
 
-            BufferedReader reader = Files.newBufferedReader(path);
-            long currentLine = 0;
-            String line;
+            try (BufferedReader reader = Files.newBufferedReader(path)) {
+                long currentLine = 0;
+                String line;
 
-            while((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null) {
 
-                currentLine++;
-                if (currentLine <= lastProcessedLine) continue;
+                    currentLine++;
+                    if (currentLine <= lastProcessedLine) continue;
 
-                UserLog userLog = parseLine(line);
+                    UserLog userLog = parseLine(line);
 
-                if (userLog != null) {
-                    userLogRepository.save(userLog);
+                    if (userLog != null) {
+                        userLogRepository.save(userLog);
+                    }
+
+                    lastProcessedLine = currentLine;
+                    log.info("로그 저장 완료 — 처리 라인 수: {}", currentLine);
                 }
-
-                lastProcessedLine = currentLine;
-                log.info("로그 저장 완료 — 처리 라인 수: {}", currentLine);
             }
         } catch (IOException e) {
             log.error("로그 파일 처리 중 오류 발생: {}", e.getMessage(), e);
-            throw new RuntimeException(e);
         }
     }
 

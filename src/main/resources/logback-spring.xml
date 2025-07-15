@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="30 seconds">
 
     <!-- 로그 파일 저장 경로 지정 -->
-    <property name="LOG_PATH" value="C:\log" />
+    <property name="LOG_PATH" value="C:/log" />
 
     <!-- 로그 패턴 정의 -->
     <property name="LOG_PATTERN"
