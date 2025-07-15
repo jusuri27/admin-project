@@ -74,11 +74,15 @@ public class UserLogService {
             String httpMethod = tokens[2].split("=")[1]; // GET
             String timeStr = tokens[3].split("=")[1]; // 2025-07-07 14:24:25
 
+            LocalDateTime logTime = LocalDateTime.parse(timeStr); // 2025-07-07 14:24:25
+            String logDate = timeStr.replace("-", "").substring(0, 8); // 20250707
+
             return UserLog.builder()
                     .uri(uri)
                     .ip(ip)
                     .httpMethod(httpMethod)
-                    .logTime(LocalDateTime.parse(timeStr))
+                    .logTime(logTime)
+                    .logDate(logDate)
                     .build();
         } catch (Exception e) {
             log.error("로그 파싱 실패: " + line);

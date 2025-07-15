@@ -34,4 +34,8 @@ public class UserLog {
     @Comment("요청 시간")
     @Column(name = "log_time", nullable = false)
     private LocalDateTime logTime;
+
+    @Comment("기록 일자")
+    @Column(name = "log_date", nullable = false, length = 8)
+    private String logDate;
 }
